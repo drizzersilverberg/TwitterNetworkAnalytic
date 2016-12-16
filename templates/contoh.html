@@ -1,53 +1,13 @@
 <html>
 <head>
-	<title>Twitter Network Analytic</title>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-	<meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<style type="text/css">
-		section{
-			background-color: red;
-		}
-		aside{
-			/*background-color: blue;*/
-		}
-		#canvas-force{
-			background-color: yellow;
-		}
-		canvas{
-			background-color: lime;
-		}
-	</style>
+	<title>CONTOH</title>
 </head>
 <body>
-	<div class="container">
-		<header class="row">
-			<h3>Twitter Network Analytic</h3>
-		</header>
-		<main class="row">
-			<section class="col-md-8">
-				<div id="canvas-force"></div>
-			</section>
-			<aside class="col-md-4">
-				<p>Feature :</p>
-				<ul>
-					<li>Analyze Twitter User Graph by Mention</li>
-					<li>Analyze Twitter Topic by User Tweet</li>
-				</ul>
-			</aside>
-		</main>
-		<footer class="row">
-			Copyright
-		</footer>
-	</div>
-<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script>
-    // Figure width and height
-    var width = 400,
-        height = 300;
 
+	<div id="canvas-force"></div>
+
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script>
     // Number of Nodes
     var nNodes = 250,
         createLink = false;
@@ -76,6 +36,10 @@
             }
         }
     }
+
+    // Figure width and height
+    var width = 650,
+        height = 300;
 
     // Create and configure the force layout
     var force = d3.layout.force()
