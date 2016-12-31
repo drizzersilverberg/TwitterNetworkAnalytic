@@ -1,0 +1,113 @@
+<html>
+<head>
+	<title>Topic Analytic</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style type="text/css">
+		footer{
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<header class="row container">
+			<h3>Twitter Network Analytic | Topic Analytic</h3>
+		</header>
+		<main class="row container">
+			<section class="col-md-8">
+				<div id="canvas-force"></div>
+			</section>
+		</main>
+		<footer class="row container">
+			&copy; 2017 Drizzer Tech 
+		</footer>
+	</div>
+	
+	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+		// var url = 'https://gist.githubusercontent.com/d3byex/5a8267f90a0d215fcb3e/raw/b53d20a8a6a82fd8bab2c03e0ec5a96262b5c8da/uni_network.json';
+        
+		var data = {
+			  "nodes": [
+			    { "name": "Mike" },
+			    { "name": "Marcia" },
+			    { "name": "Chrissy" },
+			    { "name": "Selena" },
+			    { "name": "William" },
+			    { "name": "Mikael" },
+			    { "name": "Bleu" },
+			    { "name": "Tagg" },
+			    { "name": "Bob" },
+			    { "name": "Mona" },
+			    { "name": "Baby" }
+			  ],
+			  "edges": [
+			    { "source": 0, "target":  1 },
+			    { "source": 0, "target":  4 },
+			    { "source": 0, "target":  5 },
+			    { "source": 0, "target":  6 },
+			    { "source": 0, "target":  7 },
+			    { "source": 1, "target":  2 },
+			    { "source": 1, "target":  3 },
+			    { "source": 1, "target":  5 },
+			    { "source": 1, "target":  8 },
+			    { "source": 1, "target":  9 },
+			    { "source": 5, "target": 10 }
+			  ]
+			}
+
+        // d3.json(url, function (error, data) {
+            var width = 720, height = 480;
+
+            var svg = d3.select('#canvas-force').append('svg')
+                .attr({
+                    width: width,
+                    height: height
+                })
+                // .style('background-color','silver');
+
+            var force = d3.layout.force()
+                .nodes(data.nodes)
+                .links(data.edges)
+                .size([width, height])
+                .linkDistance(200)
+                .start();
+
+            var edges = svg.selectAll('line')
+                .data(data.edges)
+                .enter()
+                .append('line')
+                .style('stroke', '#ccc')
+                .style('stroke-width', 1);
+
+            var colors = d3.scale.category20();
+            var nodes = svg
+                .selectAll('circle')
+                .data(data.nodes)
+                .enter()
+                .append('circle')
+                .attr('r', 10)
+                .attr('fill', function (d, i) {
+                    return colors(i);
+                })
+                .call(force.drag);
+
+            force.on('tick', function () {
+                edges.attr({
+                    x1: function (d) { return d.source.x; },
+                    y1: function (d) { return d.source.y; },
+                    x2: function (d) { return d.target.x; },
+                    y2: function (d) { return d.target.y; }
+                });
+
+                nodes.attr('cx', function (d) { return d.x; })
+                     .attr('cy', function (d) { return d.y; });
+            });
+        // });
+	</script>
+</body>
+</html>

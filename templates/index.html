@@ -6,21 +6,35 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">
+		header{
+			color: #337AB7;
+		}
 		section{
-			background-color: red;
+			/*background-color: red;*/
 		}
 		aside{
 			/*background-color: blue;*/
 		}
 		#canvas-force{
-			background-color: yellow;
+			/*background-color: yellow;*/
 		}
 		canvas{
-			background-color: lime;
+			/*background-color: lime;*/
+		    display: block;
+		    margin: auto;
+		}
+		svg{
+			/*background-color: lime;*/
+		    display: block;
+		    margin: auto;
+		}
+		footer{
+			text-align: center;
 		}
 	</style>
 </head>
 <body>
+<div class="container">
 	<div class="container">
 		<header class="row">
 			<h3>Twitter Network Analytic</h3>
@@ -30,23 +44,45 @@
 				<div id="canvas-force"></div>
 			</section>
 			<aside class="col-md-4">
-				<p>Feature :</p>
-				<ul>
-					<li>Analyze Twitter User Graph by Mention</li>
-					<li>Analyze Twitter Topic by User Tweet</li>
-				</ul>
+				<div class="row">
+					<form class="form-inline" method="GET" action="/user">
+						<fieldset class="form-group">
+							<label class="sr-only">Analyze User</label>
+							<input type="text" class="form-control" placeholder="Enter Username (without @)">
+						</fieldset>
+						<button type="submit" class="btn btn-primary">Analyze User</button>
+					</form>
+				</div>
+				<div class="row">
+					<form class="form-inline" method="GET" action="/topic">
+						<fieldset class="form-group">
+							<label class="sr-only">Analyze Topic</label>
+							<input type="text" class="form-control" placeholder="Enter Topic Keyword">
+						</fieldset>
+						<button type="submit" class="btn btn-primary">Analyze Topic</button>
+					</form>
+				</div>
+				<div class="row">
+					<p>Feature :</p>
+					<ul>
+						<li>Analyze Twitter User Graph by Mention</li>
+						<li>Analyze Twitter Topic by User Tweet</li>
+					</ul>
+				</div>
+
 			</aside>
 		</main>
 		<footer class="row">
-			Copyright
+			&copy; 2017 Drizzer Tech 
 		</footer>
 	</div>
+</div>
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script>
     // Figure width and height
     var width = 400,
-        height = 300;
+        height = 500;
 
     // Number of Nodes
     var nNodes = 250,
@@ -90,6 +126,7 @@
     var canvas = d3.select('div#canvas-force').append('canvas')
         .attr('width', width + 'px')
         .attr('height', height + 'px')
+        // .style('background-color', 'silver')
         .node();
 
     // Get the canvas context.
