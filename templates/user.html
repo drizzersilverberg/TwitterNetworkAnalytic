@@ -1,13 +1,13 @@
 <html>
 <head>
-	<title>User Account Analytic</title>
+	<title>TNA USER</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">
-		footer{
-			text-align: center;
+		svg {
+		    background-color: antiquewhite;
 		}
 	</style>
 </head>
@@ -27,88 +27,80 @@
 	</div>
 	
 	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js" charset="utf-8"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	<script type="text/javascript">
-		var url = 'http://localhost:4000/get_user?screen_name=barrackobama';
-        // var url = 'https://gist.githubusercontent.com/d3byex/5a8267f90a0d215fcb3e/raw/b53d20a8a6a82fd8bab2c03e0ec5a96262b5c8da/uni_network.json';
-		// var data = {
-		// 	  "nodes": [
-		// 	    { "name": "Mike" },
-		// 	    { "name": "Marcia" },
-		// 	    { "name": "Chrissy" },
-		// 	    { "name": "Selena" },
-		// 	    { "name": "William" },
-		// 	    { "name": "Mikael" },
-		// 	    { "name": "Bleu" },
-		// 	    { "name": "Tagg" },
-		// 	    { "name": "Bob" },
-		// 	    { "name": "Mona" },
-		// 	    { "name": "Baby" }
-		// 	  ],
-		// 	  "edges": [
-		// 	    { "source": 0, "target":  1 },
-		// 	    { "source": 0, "target":  4 },
-		// 	    { "source": 0, "target":  5 },
-		// 	    { "source": 0, "target":  6 },
-		// 	    { "source": 0, "target":  7 },
-		// 	    { "source": 1, "target":  2 },
-		// 	    { "source": 1, "target":  3 },
-		// 	    { "source": 1, "target":  5 },
-		// 	    { "source": 1, "target":  8 },
-		// 	    { "source": 1, "target":  9 },
-		// 	    { "source": 5, "target": 10 }
-		// 	  ]
-		// 	}
+		const data = {
+			"nodes" : [
+				{"id" : "riou"},
+				{"id" : "nanami"}
+			],
+			"edges" : [
+				{
+					"source" : "riou",
+					"target" : "nanami",
+					"weight" : 10
+				}
+			]
+		}
 
-        d3.json(url, function (error, data) {
-            var width = 720, height = 480;
+		const width = 720, height = 480
+		const svg = d3.select("#canvas-force").append("svg")
+			.attr("width", width)
+			.attr("height", height)
 
-            var svg = d3.select('#canvas-force').append('svg')
-                .attr({
-                    width: width,
-                    height: height
-                })
-                ;
-                // .style('background-color','silver');
+		// custom to change edges index to id
+		const links = [];
+		data.edges.forEach(function(e){
+			const source_node = data.nodes.filter(function(n) { return n.id === e.source; })[0]
+			const target_node = data.nodes.filter(function(n) { return n.id === e.target; })[0]
+			links.push({
+				source: source_node,
+				target: target_node,
+				weight: e.weight
+			});
+		});
 
-            var force = d3.layout.force()
-                .nodes(data.nodes)
-                .links(data.edges)
-                .size([width, height])
-                .linkDistance(200)
-                .start();
+		const force = d3.layout.force()
+			.nodes(data.nodes)
+			.links(links)
+			.size([width,height])
+			.linkDistance(200)
+			.start()
 
-            var edges = svg.selectAll('line')
-                .data(data.edges)
-                .enter()
-                .append('line')
-                .style('stroke', '#ccc')
-                .style('stroke-width', 1);
+		const edges = svg.selectAll('.link')
+			.data(links)
+			.enter()
+			.append('line')
+				.style('stroke', 'black')
+				.style('stroke-width', 20)
 
-            var colors = d3.scale.category20();
-            var nodes = svg
-                .selectAll('circle')
-                .data(data.nodes)
-                .enter()
-                .append('circle')
-                .attr('r', 10)
-                .attr('fill', function (d, i) {
-                    return colors(i);
-                })
-                .call(force.drag);
+		const nodes = svg.selectAll('circle')
+			.data(data.nodes)
+			.enter()
+			.append('circle')
+				.attr('r',10)
+				.attr('fill', 'blue')
+			.call(force.drag)
 
-            force.on('tick', function () {
-                edges.attr({
-                    x1: function (d) { return d.source.x; },
-                    y1: function (d) { return d.source.y; },
-                    x2: function (d) { return d.target.x; },
-                    y2: function (d) { return d.target.y; }
-                });
+		nodes.append('text')
+			.attr("dx", 12)
+			.attr("dy", ".35em")
+			.text(function(d) { return d.id; })
 
-                nodes.attr('cx', function (d) { return d.x; })
-                     .attr('cy', function (d) { return d.y; });
-            });
-        });
+		force.on('tick', function(){
+			edges.attr({
+				x1: function (d) {return d.source.x;},
+				y1: function (d) {return d.source.y;},
+				x2: function (d) {return d.source.x;},
+				y2: function (d) {return d.source.y;}
+			});
+
+			nodes
+				.attr('cx', function (d) { return d.x; })
+				.attr('cy', function (d) { return d.y; });
+		});
+
 	</script>
 </body>
 </html>

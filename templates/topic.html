@@ -1,7 +1,6 @@
 <html>
 <head>
 	<title>Topic Analytic</title>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -27,36 +26,35 @@
 	</div>
 	
 	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	<script type="text/javascript">
 		// var url = 'https://gist.githubusercontent.com/d3byex/5a8267f90a0d215fcb3e/raw/b53d20a8a6a82fd8bab2c03e0ec5a96262b5c8da/uni_network.json';
         
 		var data = {
 			  "nodes": [
-			    { "name": "Mike" },
-			    { "name": "Marcia" },
-			    { "name": "Chrissy" },
-			    { "name": "Selena" },
-			    { "name": "William" },
-			    { "name": "Mikael" },
-			    { "name": "Bleu" },
-			    { "name": "Tagg" },
-			    { "name": "Bob" },
-			    { "name": "Mona" },
-			    { "name": "Baby" }
+			    { "id": "Mike" },
+			    { "id": "Marcia" },
+			    { "id": "Chrissy" },
+			    { "id": "Selena" },
+			    { "id": "William" },
+			    { "id": "Mikael" },
+			    { "id": "Bleu" },
+			    { "id": "Tagg" },
+			    { "id": "Bob" },
+			    { "id": "Mona" },
+			    { "id": "Baby" }
 			  ],
 			  "edges": [
-			    { "source": 0, "target":  1 },
-			    { "source": 0, "target":  4 },
-			    { "source": 0, "target":  5 },
-			    { "source": 0, "target":  6 },
-			    { "source": 0, "target":  7 },
-			    { "source": 1, "target":  2 },
-			    { "source": 1, "target":  3 },
-			    { "source": 1, "target":  5 },
-			    { "source": 1, "target":  8 },
-			    { "source": 1, "target":  9 },
-			    { "source": 5, "target": 10 }
+			    { "source": "Mike", "target":  "Marcia" },
+			    { "source": "Mike", "target":  "William" },
+			    { "source": "Mike", "target":  "Mikael" },
+			    { "source": "Mike", "target":  "Bleu" },
+			    { "source": "Mike", "target":  "Tagg" },
+			    { "source": "Marcia", "target":  "Chrissy" },
+			    { "source": "Marcia", "target":  "Selena" },
+			    { "source": "Marcia", "target":  "Mikael" },
+			    { "source": "Marcia", "target":  "Bob" },
+			    { "source": "Marcia", "target":  "Mona" },
+			    { "source": "Mikael", "target": "Baby" }
 			  ]
 			}
 
@@ -70,15 +68,25 @@
                 })
                 // .style('background-color','silver');
 
+            const links = [];
+			data.edges.forEach(function(e){
+				const source_node = data.nodes.filter(function(n) { return n.id === e.source; })[0]
+				const target_node = data.nodes.filter(function(n) { return n.id === e.target; })[0]
+				links.push({
+					source: source_node,
+					target: target_node
+				});
+			});
+
             var force = d3.layout.force()
                 .nodes(data.nodes)
-                .links(data.edges)
+                .links(links)
                 .size([width, height])
                 .linkDistance(200)
                 .start();
 
             var edges = svg.selectAll('line')
-                .data(data.edges)
+                .data(links)
                 .enter()
                 .append('line')
                 .style('stroke', '#ccc')
