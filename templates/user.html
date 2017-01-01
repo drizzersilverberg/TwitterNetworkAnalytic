@@ -29,38 +29,38 @@
 	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	<script type="text/javascript">
-		// var url = 'https://gist.githubusercontent.com/d3byex/5a8267f90a0d215fcb3e/raw/b53d20a8a6a82fd8bab2c03e0ec5a96262b5c8da/uni_network.json';
-        
-		var data = {
-			  "nodes": [
-			    { "name": "Mike" },
-			    { "name": "Marcia" },
-			    { "name": "Chrissy" },
-			    { "name": "Selena" },
-			    { "name": "William" },
-			    { "name": "Mikael" },
-			    { "name": "Bleu" },
-			    { "name": "Tagg" },
-			    { "name": "Bob" },
-			    { "name": "Mona" },
-			    { "name": "Baby" }
-			  ],
-			  "edges": [
-			    { "source": 0, "target":  1 },
-			    { "source": 0, "target":  4 },
-			    { "source": 0, "target":  5 },
-			    { "source": 0, "target":  6 },
-			    { "source": 0, "target":  7 },
-			    { "source": 1, "target":  2 },
-			    { "source": 1, "target":  3 },
-			    { "source": 1, "target":  5 },
-			    { "source": 1, "target":  8 },
-			    { "source": 1, "target":  9 },
-			    { "source": 5, "target": 10 }
-			  ]
-			}
+		var url = 'http://localhost:4000/get_user?screen_name=barrackobama';
+        // var url = 'https://gist.githubusercontent.com/d3byex/5a8267f90a0d215fcb3e/raw/b53d20a8a6a82fd8bab2c03e0ec5a96262b5c8da/uni_network.json';
+		// var data = {
+		// 	  "nodes": [
+		// 	    { "name": "Mike" },
+		// 	    { "name": "Marcia" },
+		// 	    { "name": "Chrissy" },
+		// 	    { "name": "Selena" },
+		// 	    { "name": "William" },
+		// 	    { "name": "Mikael" },
+		// 	    { "name": "Bleu" },
+		// 	    { "name": "Tagg" },
+		// 	    { "name": "Bob" },
+		// 	    { "name": "Mona" },
+		// 	    { "name": "Baby" }
+		// 	  ],
+		// 	  "edges": [
+		// 	    { "source": 0, "target":  1 },
+		// 	    { "source": 0, "target":  4 },
+		// 	    { "source": 0, "target":  5 },
+		// 	    { "source": 0, "target":  6 },
+		// 	    { "source": 0, "target":  7 },
+		// 	    { "source": 1, "target":  2 },
+		// 	    { "source": 1, "target":  3 },
+		// 	    { "source": 1, "target":  5 },
+		// 	    { "source": 1, "target":  8 },
+		// 	    { "source": 1, "target":  9 },
+		// 	    { "source": 5, "target": 10 }
+		// 	  ]
+		// 	}
 
-        // d3.json(url, function (error, data) {
+        d3.json(url, function (error, data) {
             var width = 720, height = 480;
 
             var svg = d3.select('#canvas-force').append('svg')
@@ -108,7 +108,7 @@
                 nodes.attr('cx', function (d) { return d.x; })
                      .attr('cy', function (d) { return d.y; });
             });
-        // });
+        });
 	</script>
 </body>
 </html>
