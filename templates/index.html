@@ -1,28 +1,120 @@
 {% extends "layout.html" %}
 {% block title %} {{ inner.title }} {% endblock %}
 {% block head %} {{ inner.head}} {% endblock %}
+{% block style %}
+    #d3-graphic{
+        width: 100%;
+        height: 100%;
+        stroke: 'red';
+        stroke-width: '5px';
+    }
+
+{% endblock %}
 {% block content %}
 <main class="container">
-    <form class="form-inline" action="/user" method="GET">
-        <div class="form-group">
-            <input type="text" class="form-control" id="q" placeholder="enter @ username">
+    <div class="row">
+        <div class="col-md-6 col-xs-12">
+            <div id="d3-graphic"></div>
+            <div class="row-span"></div>
         </div>
-        <div class="form-group">
-            <input type="number" class="form-control" id="row">
+        <div class="col-md-6 col-xs-12">
+            <form class="form-inline" action="/user" method="GET">
+                <div class="input-group">
+                    <span class="input-group-addon"><i>@</i></span>
+                    <input type="text" class="form-control" id="q" placeholder="enter username">
+                </div>
+                <div class="form-group">
+                    <input type="number" class="form-control" id="row">
+                </div>
+                <button type="submit" class="btn btn-primary">Analyze User&nbsp;</button>
+            </form>
+        <div class="row-span"></div>
+            <form class="form-inline" action="/topic" method="GET">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-glass"></i></span>
+                    <input type="text" class="form-control" id="q" placeholder="enter topic keyword">
+                </div>
+                <div class="form-group">
+                    <input type="number" class="form-control" id="row">
+                </div>
+                <button type="submit" class="btn btn-info">Analyze Topic</button>
+            </form>
         </div>
-        <button type="submit" class="btn btn-default">Analyze User</button>
-    </form>
-    <div class="row-span"></div>
-    <form class="form-inline" action="/topic" method="GET">
-        <div class="form-group">
-            <input type="text" class="form-control" id="q" placeholder="enter topic keyword">
-        </div>
-        <div class="form-group">
-            <input type="number" class="form-control" id="row">
-        </div>
-        <button type="submit" class="btn btn-default">Analyze Topic</button>
-    </form>
+        
+    </div>
 </main>
 {% endblock %}
 {% block script %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/d3.v3.min.js') }}" charset="utf-8"></script>
+<script type="text/javascript">    
+    const url = "https://raw.githubusercontent.com/drizzersilverberg/drizzer-data/master/json/tna-api-user.json";
+    d3.json(url, function (error, data){
+        const width = 500, height = 500;
+        const svg = d3.select('#d3-graphic')
+            .append('svg')
+            .attr('width', '100%')
+            .attr('height', height)
+            .style('border-color','white')
+            .style('border-style','solid')
+            .style('border-width','1px')
+            .style('box-shadow','1px 1px 5px #888888')
+            .style('background-color','white');
+
+        const links = [];
+        data.edges.forEach(function(e){
+            const source_node = data.nodes.filter(function(n) { return n.id === e.source; })[0]
+            const target_node = data.nodes.filter(function(n) { return n.id === e.target; })[0]
+            links.push({
+                source: source_node,
+                target: target_node
+            });
+        });
+
+        // console.log(data.vertices);
+        // console.log(links);
+
+        const force = d3.layout.force()
+            .nodes(data.nodes)
+            .links(links)
+            .size([width,height])
+            .linkDistance(200)
+            .start();
+
+        const edges = svg.selectAll('line')
+            .data(links)
+            .enter()
+            .append('line')
+            .style('stroke', '#ccc')
+            .style('stroke-width', 2);
+          
+        const nodes = svg.selectAll('g')
+            .data(data.nodes)
+            .enter()
+            .append('g')
+            .call(force.drag);
+
+        nodes.append('image')
+            .attr("xlink:href", function (d) { return d.profile_image_url; })
+            .attr("x", -8)
+            .attr("y", -8)
+            .attr("width", 16)
+            .attr("height", 16);
+        
+        nodes.append("text")
+            .attr("dx", 12)
+            .attr("dy", ".35em")
+            .text(function(d) { return d.screen_name });
+
+       force.on('tick', function () {
+            edges.attr({
+                x1: function (d) { return d.source.x; },
+                y1: function (d) { return d.source.y; },
+                x2: function (d) { return d.target.x; },
+                y2: function (d) { return d.target.y; }
+            });
+
+            nodes.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+        });
+    });
+</script>
 {% endblock %}
