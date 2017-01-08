@@ -17,30 +17,25 @@
             <div id="d3-graphic"></div>
             <div class="row-span"></div>
         </div>
-        <div class="col-md-6 col-xs-12">
-            <form class="form-inline" action="/user" method="GET">
-                <div class="input-group">
-                    <span class="input-group-addon"><i>@</i></span>
-                    <input type="text" class="form-control" id="q" placeholder="enter username">
-                </div>
-                <div class="form-group">
-                    <input type="number" class="form-control" id="row">
-                </div>
-                <button type="submit" class="btn btn-primary">Analyze User&nbsp;</button>
-            </form>
+        <div class="col-md-6 col-xs-12" id="home_form">
+        <ul class="nav nav-tabs">
+            <li class="active" id="account_list"><a href="#" id="account_menu">Account</a></li>
+            <li id="topic_list"><a href="#" id="topic_menu">Topic</a></li>
+        </ul>
         <div class="row-span"></div>
-            <form class="form-inline" action="/topic" method="GET">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-glass"></i></span>
-                    <input type="text" class="form-control" id="q" placeholder="enter topic keyword">
-                </div>
-                <div class="form-group">
-                    <input type="number" class="form-control" id="row">
-                </div>
-                <button type="submit" class="btn btn-info">Analyze Topic</button>
-            </form>
-        </div>
-        
+        <div id="home_form"></div>
+        <form class="form-group" action="/user" method="GET">
+            <div class="input-group">
+                <span class="input-group-addon"><i>@</i></span>
+                <input type="text" class="form-control" id="q" placeholder="enter username">
+            </div>
+            <div class="row-span"></div>
+            <div class="form-group">
+                <input type="number" class="form-control" id="row">
+            </div>
+            <button type="submit" class="btn btn-primary">Analyze User&nbsp;</button>
+        </form>
+        <div class="row-span"></div>
     </div>
 </main>
 {% endblock %}
@@ -112,9 +107,38 @@
                 x2: function (d) { return d.target.x; },
                 y2: function (d) { return d.target.y; }
             });
-
             nodes.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
         });
     });
+
+    $("document").ready(function(){
+        document.getElementById("account_menu").addEventListener("click", function (evt) {
+            changeForm("account");
+        });
+        document.getElementById("topic_menu").addEventListener("click", function (evt) {
+            changeForm("topic");
+        });
+    });
+
+    function changeForm(menu){
+        if(menu === "account"){
+            $("#topic_list").removeAttr("class");
+            $("#account_list").attr("class","active");
+            $("form").attr("action","/account");
+            $("button").text("Analyze Account");
+            $("span i").removeAttr("class");
+            $("span i").text("@");
+            $("#q").attr("placeholder","Enter a screen name");
+        }else{
+            $("#account_list").removeAttr("class");
+            $("#topic_list").attr("class","active");
+            $("form").attr("action","/topic");
+            $("button").text("Analyze Topic");
+            $("span i").attr("class","glyphicon glyphicon-glass");
+            $("span i").text("");
+            $("#q").attr("placeholder","Enter a topic keyword");
+        }
+    }
+
 </script>
 {% endblock %}
